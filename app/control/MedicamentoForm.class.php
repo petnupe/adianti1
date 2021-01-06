@@ -23,17 +23,18 @@ class MedicamentoForm extends TPage
 
         // create the form fields
         $id = new TEntry('id');
-        $nome = new TText('nome');
+        $nome = new TEntry('nome');
         $descricao = new TText('descricao');
-        $medidas_id = new TEntry('medidas_id');
+        $medidas_id = new TDBCombo('medidas_id', 'db', 'Medidas', 'id', 'sigla');
 
 
         // add the fields
         $this->form->addFields( [ new TLabel('Id'), $id ] );
         $this->form->addFields( [ new TLabel('Nome'), $nome ] );
         $this->form->addFields( [ new TLabel('Descricao'), $descricao ] );
-        $this->form->addFields( [ new TLabel('Medidas Id'), $medidas_id ] );
+        $this->form->addFields( [ new TLabel('Medidas'), $medidas_id ] );
 
+        $nome->addValidation('Nome', new TRequiredValidator);
 
 
         // set sizes
@@ -98,6 +99,7 @@ class MedicamentoForm extends TPage
             TTransaction::close(); // close the transaction
             
             new TMessage('info', AdiantiCoreTranslator::translate('Record saved'));
+            
         }
         catch (Exception $e) // in case of exception
         {

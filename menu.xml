@@ -23,6 +23,29 @@
             </menuitem>
         </menu>
     </menuitem>
+    <menuitem label='Cadastros'>
+        <icon>fa:home fa-fw</icon>
+        <menu>
+            <menuitem label='Medidas'>
+                <icon>fa:book fa-fw</icon>
+                <action>MedidasFormList</action>
+            </menuitem>
+            
+            <menuitem label='Medicamentos'>
+                <icon>fa:desktop fa-fw</icon>
+                <action>MedicamentoFormList</action>
+            </menuitem>
+            
+            <menuitem label='Pacientes'>
+                <icon>fa:magic fa-fw</icon>
+                <action>PacienteFormList</action>
+            </menuitem>
+            <menuitem label='Receitas'>
+                <icon>fa:magic fa-fw</icon>
+                <action>MedicamentoPacienteFormList</action>
+            </menuitem>            
+        </menu>
+    </menuitem>
     <menuitem label='Configuração'>
         <icon>fa:cog fa-fw</icon>
         <menu>

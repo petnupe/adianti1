@@ -7,7 +7,7 @@ class MedicamentoPaciente extends TRecord
 {
     const TABLENAME = 'medicamento_paciente';
     const PRIMARYKEY= 'id';
-    const IDPOLICY =  'serial'; // {max, serial}
+    const IDPOLICY =  'max'; // {max, serial}
     
     
     private $paciente;

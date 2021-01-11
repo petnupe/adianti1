@@ -11,6 +11,9 @@ class Medicamento extends TRecord
         parent::addAttribute('nome');
         parent::addAttribute('descricao');
         parent::addAttribute('medidas_id');
-        parent::addAttribute('miligramas');
+    }
+    
+    public function getMedida() {
+        return new Medidas($this->medidas_id);
     }
 }

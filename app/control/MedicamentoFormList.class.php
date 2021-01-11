@@ -27,11 +27,6 @@ class MedicamentoFormList extends TPage
         $id = new TEntry('id');
         $nome = new TEntry('nome');
         $descricao = new TText('descricao');
-        $miligramas = new TText('miligramas');
-        
-        $miligramas = new TEntry('miligramas');
-        $miligramas->addValidation('Miligramas', new TMaxLengthValidator, array(3), new TNumericValidator);
-        $miligramas->addValidation('Miligramas', new TNumericValidator);
         
         $medidas_id = new TDBCombo('medidas_id', 'db', 'Medidas', 'id', 'sigla');
         $medidas_id->setDefaultOption(false);
@@ -40,7 +35,6 @@ class MedicamentoFormList extends TPage
         $this->form->addFields( [ new TLabel('Id') ], [ $id ] );
         $this->form->addFields( [ new TLabel('Nome') ], [ $nome ] );
         $this->form->addFields( [ new TLabel('Descricao') ], [ $descricao ] );
-        $this->form->addFields( [ new TLabel('Miligramas (MG)') ], [ $miligramas ] );
         $this->form->addFields( [ new TLabel('Medidas') ], [ $medidas_id ] );
 
         $nome->addValidation('Nome', new TRequiredValidator);
@@ -51,7 +45,6 @@ class MedicamentoFormList extends TPage
         $id->setSize('10%');
         $nome->setSize('50%');
         $descricao->setSize('50%');
-        $miligramas->setSize('10%');
         $medidas_id->setSize('10%');
 
 

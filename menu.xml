@@ -42,7 +42,7 @@
             </menuitem>
             <menuitem label='Receitas'>
                 <icon>fa:magic fa-fw</icon>
-                <action>MedicamentoPacienteFormList</action>
+                <action>PacienteForm</action>
             </menuitem>            
         </menu>
     </menuitem>

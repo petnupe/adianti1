@@ -17,40 +17,35 @@ class MedicamentoPacienteFormList extends TPage
     public function __construct( $param )
     {
         parent::__construct();
-        
-        
         $this->form = new BootstrapFormBuilder('form_MedicamentoPaciente');
         $this->form->setFormTitle('MedicamentoPaciente');
-        
 
         // create the form fields
-        $id = new TEntry('id');
+        //$id = new TEntry('id');
         
-        //$medicamento_id = new TDBCUniqueSearch('medicamento_id', 'db', 'Medicamento', 'id', 'nome');
-        
+        $paciente_id = new TDBCombo('paciente_id', 'db', 'Paciente', 'id', 'nome');
+        $paciente_id->setChangeAction(new TAction(null, 'getMedicamentosPaciente'));
         
         $medicamento_id = new TDBCombo('medicamento_id', 'db', 'Medicamento', 'id', 'nome');
-        $paciente_id = new TDBCombo('paciente_id', 'db', 'Paciente', 'id', 'nome');
-        $mes_referente = new TEntry('mes_referente');
         $quantidade = new TEntry('quantidade');
+
         $hora = new TEntry('hora');
+        $miligramas = new TEntry('miligramas');
 
 
         // add the fields
-        $this->form->addFields( [ new TLabel('Id') ], [ $id ] );
         $this->form->addFields( [ new TLabel('Paciente') ], [ $paciente_id ] );
         $this->form->addFields( [ new TLabel('Medicamento') ], [ $medicamento_id ] );
-        $this->form->addFields( [ new TLabel('Mes Referente') ], [ $mes_referente ] );
-        $this->form->addFields( [ new TLabel('Quantidade') ], [ $quantidade ] );
+        $this->form->addFields( [ new TLabel('Miligramas') ], [ $miligramas ] );
+        $this->form->addFields([new TLabel('Quantidade')], [ $quantidade ], [new TLabel('')]);
         $this->form->addFields( [ new TLabel('Hora') ], [ $hora ] );
 
 
         // set sizes
-        $id->setSize('10%');
         $medicamento_id->setSize('100%');
         $paciente_id->setSize('100%');
-        $mes_referente->setSize('100%');
-        $quantidade->setSize('10%');
+        //$mes_referente->setSize('100%');
+        $quantidade->setSize('30%');
         $hora->setSize('10%');
 
 
@@ -72,15 +67,12 @@ class MedicamentoPacienteFormList extends TPage
         // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->style = 'width: 100%';
-        // $this->datagrid->datatable = 'true';
-        // $this->datagrid->enablePopover('Popover', 'Hi <b> {name} </b>');
-        
+       
 
         // creates the datagrid columns
         $column_id = new TDataGridColumn('id', 'Id', 'left');
         $column_paciente_id = new TDataGridColumn('paciente_id', 'Paciente', 'left');
         $column_medicamento_id = new TDataGridColumn('medicamento_id', 'Medicamento', 'left');
-        $column_mes_referente = new TDataGridColumn('mes_referente', 'Referente', 'left');
         $column_quantidade = new TDataGridColumn('quantidade', 'Qtd', 'left');
         $column_hora = new TDataGridColumn('hora', 'Hora', 'left');
 
@@ -94,22 +86,18 @@ class MedicamentoPacienteFormList extends TPage
         
         
         $this->datagrid->addColumn($column_paciente_id);
-        $this->datagrid->addColumn($column_mes_referente);
+        //$this->datagrid->addColumn($column_mes_referente);
         $this->datagrid->addColumn($column_quantidade);
         $this->datagrid->addColumn($column_hora);
 
         
         // creates two datagrid actions
         $action1 = new TDataGridAction([$this, 'onEdit']);
-        //$action1->setUseButton(TRUE);
-        //$action1->setButtonClass('btn btn-default');
         $action1->setLabel(_t('Edit'));
         $action1->setImage('far:edit blue');
         $action1->setField('id');
         
         $action2 = new TDataGridAction([$this, 'onDelete']);
-        //$action2->setUseButton(TRUE);
-        //$action2->setButtonClass('btn btn-default');
         $action2->setLabel(_t('Delete'));
         $action2->setImage('far:trash-alt red');
         $action2->setField('id');
@@ -131,7 +119,10 @@ class MedicamentoPacienteFormList extends TPage
         $container->style = 'width: 100%';
         // $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         $container->add($this->form);
-        $container->add(TPanelGroup::pack('', $this->datagrid, $this->pageNavigation));
+        
+        if(isset($param['paciente_id'])) {
+            $container->add(TPanelGroup::pack('', $this->datagrid, $this->pageNavigation));
+        }
         
         parent::add($container);
     }
@@ -160,6 +151,8 @@ class MedicamentoPacienteFormList extends TPage
             }
             $criteria->setProperties($param); // order, offset
             $criteria->setProperty('limit', $limit);
+            
+            $criteria->add(new TFilter('paciente_id', '=', $this->form->getData()->paciente_id));
             
             // load the objects according to criteria
             $objects = $repository->load($criteria, FALSE);
@@ -337,7 +330,10 @@ class MedicamentoPacienteFormList extends TPage
             $Medicamento = new Medicamento($id);
         TTransaction::close();
         return $Medicamento->nome;
-    
+    }
+
+    static function getMedicamentoPaciente() {
+        $this->onReload();
     }
 
 }

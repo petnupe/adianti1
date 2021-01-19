@@ -23,6 +23,8 @@ class MedicamentoPaciente extends TRecord
         parent::addAttribute('paciente_id');
         parent::addAttribute('mes_referente');
         parent::addAttribute('quantidade');
+        parent::addAttribute('hora');
+        parent::addAttribute('miligramas');
     }
 
     

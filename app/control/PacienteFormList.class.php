@@ -18,16 +18,16 @@ class PacienteFormList extends TPage
     {
         parent::__construct();
         
-        
         $this->form = new BootstrapFormBuilder('form_Paciente');
-        $this->form->setFormTitle('Paciente');
+        $this->form->setFormTitle('Cadastro de Pacientes');
        
 
         // create the form fields
-        $id = new TEntry('id');
+        $id = new THidden('id');
         $nome = new TEntry('nome');
         
         $dataNasc = new TDate('dataNasc');
+        $dataNasc->setValue('01/01/1950');
         $dataNasc->setMask('dd/mm/yyyy');
         
         $cartaoSus = new TEntry('cartaoSus');
@@ -55,15 +55,11 @@ class PacienteFormList extends TPage
 
 
         // add the fields
-        $this->form->addFields( [ new TLabel('Id') ], [ $id ] );
-        $this->form->addFields( [ new TLabel('Nome') ], [ $nome ] );
-        $this->form->addFields( [ new TLabel('Data nasc.') ], [ $dataNasc ] );
-        $this->form->addFields( [ new TLabel('Cartao SUS') ], [ $cartaoSus ] );
-        $this->form->addFields( [ new TLabel('RG') ], [ $rg ] );
-        $this->form->addFields( [ new TLabel('CPF') ], [ $cpf ] );
-        $this->form->addFields( [ new TLabel('Cadastro') ], [ $dataEntrada ] );
-        $this->form->addFields( [ new TLabel('Genero') ], [ $genero ] );
-        $this->form->addFields( [ new TLabel('Ativo') ], [ $ativo ] );
+        $this->form->addFields([ $id ] );
+        $this->form->addFields( [ new TLabel('Nome') ], [ $nome ],[ new TLabel('Data nasc.') ], [ $dataNasc ] );
+        $this->form->addFields( [ new TLabel('Cartao SUS') ], [ $cartaoSus ] ,[ new TLabel('RG') ], [ $rg ] );
+        $this->form->addFields( [ new TLabel('CPF') ], [ $cpf ] , [ new TLabel('Cadastro') ], [ $dataEntrada ] );
+        $this->form->addFields([ new TLabel('Genero') ], [ $genero ] , [ new TLabel('Ativo') ], [ $ativo ] );
         $this->form->addFields( [ new TLabel('Alfabetizado') ], [ $alfabetizado ] );
 
         $nome->addValidation('Nome', new TRequiredValidator);
@@ -72,16 +68,16 @@ class PacienteFormList extends TPage
 
 
         // set sizes
-        $id->setSize('100%');
-        $nome->setSize('100%');
-        $dataNasc->setSize('100%');
-        $cartaoSus->setSize('100%');
-        $rg->setSize('100%');
-        $cpf->setSize('100%');
-        $dataEntrada->setSize('100%');
-        $genero->setSize('100%');
-        $ativo->setSize('100%');
-        $alfabetizado->setSize('100%');
+        $id->setSize('10%');
+        $nome->setSize('75%');
+        $dataNasc->setSize('75%');
+        $cartaoSus->setSize('75%');
+        $rg->setSize('75%');
+        $cpf->setSize('75%');
+        $dataEntrada->setSize('75%');
+        $genero->setSize('75%');
+        $ativo->setSize('75%');
+        $alfabetizado->setSize('10%');
 
         if (!empty($id))
         {
@@ -276,7 +272,7 @@ class PacienteFormList extends TPage
             
             $this->form->validate(); // validate form data
             $data = $this->form->getData(); // get form data as array
-            
+            $data->nome = strtoupper($data->nome);
             $object = new Paciente;  // create an empty object
             
             
@@ -288,6 +284,7 @@ class PacienteFormList extends TPage
             
             // get the generated id
             $data->id = $object->id;
+            
             
             $this->form->setData($data); // fill form data
             TTransaction::close(); // close the transaction

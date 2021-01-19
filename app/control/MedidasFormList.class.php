@@ -20,17 +20,17 @@ class MedidasFormList extends TPage
         
         
         $this->form = new BootstrapFormBuilder('form_Medidas');
-        $this->form->setFormTitle('Medidas');
+        $this->form->setFormTitle('Cadastro de Medidas');
         
 
         // create the form fields
-        $id = new TEntry('id');
+        $id = new THidden('id');
         $sigla = new TEntry('sigla');
-        $descricao = new TText('descricao');
+        $descricao = new TEntry('descricao');
 
 
         // add the fields
-        $this->form->addFields( [ new TLabel('Id') ], [ $id ] );
+        $this->form->addFields([ $id ] );
         $this->form->addFields( [ new TLabel('Sigla') ], [ $sigla ] );
         $this->form->addFields( [ new TLabel('Descricao') ], [ $descricao ] );
 
@@ -39,9 +39,9 @@ class MedidasFormList extends TPage
 
 
         // set sizes
-        $id->setSize('100%');
-        $sigla->setSize('100%');
-        $descricao->setSize('100%');
+        $id->setSize('10%');
+        $sigla->setSize('10%');
+        $descricao->setSize('75%');
 
 
 

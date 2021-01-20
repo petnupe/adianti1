@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design>
+    <page>
+        <format>a4</format>
+        <orientation>P</orientation>
+    </page>
+    <text id="1">
+        <class>Text</class>
+        <x>28</x>
+        <y>192</y>
+        <font>Arial</font>
+        <size>100</size>
+        <text>Olá {nome}</text>
+        <color>#000000</color>
+        <shadowoffset>0</shadowoffset>
+        <shadowcolor>#000000</shadowcolor>
+    </text>
+    <anchor id="2">
+        <class>Anchor</class>
+        <x>69</x>
+        <y>370</y>
+        <name>teste</name>
+    </anchor>
+</design>

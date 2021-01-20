@@ -7,11 +7,15 @@
                 <icon>fa:desktop fa-fw</icon>
                 <action>MedicamentoFormList</action>
             </menuitem>
-            
+           
             <menuitem label='Pacientes'>
                 <icon>fa:magic fa-fw</icon>
                 <action>PacienteFormList</action>
             </menuitem>
+            <menuitem label='Patologias'>
+                <icon>fa:magic fa-fw</icon>
+                <action>PatologiaFormList</action>
+            </menuitem>            
             <menuitem label='Receitas'>
                 <icon>fa:magic fa-fw</icon>
                 <action>MedicamentoPacienteList</action>
@@ -47,6 +51,8 @@
             </menuitem>
         </menu>
     </menuitem>
+    -->
+
     <menuitem label='Configuração'>
         <icon>fa:cog fa-fw</icon>
         <menu>
@@ -61,5 +67,5 @@
             </menuitem>
         </menu>
     </menuitem>
-    -->
+
 </menu>

@@ -8,7 +8,7 @@
         <class>Image</class>
         <x>12</x>
         <y>12</y>
-        <width>185</width>
+        <width>185,82741116751</width>
         <height>104</height>
         <file>C:\Users\Peterson\Desktop\adianti1\app\images\logo.png</file>
     </image>
@@ -25,7 +25,7 @@
     </text>
     <text id="3">
         <class>Text</class>
-        <x>560</x>
+        <x>570</x>
         <y>24</y>
         <font>Arial</font>
         <size>24</size>
@@ -36,7 +36,7 @@
     </text>
     <text id="4">
         <class>Text</class>
-        <x>460</x>
+        <x>470</x>
         <y>66</y>
         <font>Arial</font>
         <size>34</size>
@@ -45,10 +45,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="5">
+    <text id="6">
         <class>Text</class>
         <x>20</x>
-        <y>150</y>
+        <y>164</y>
         <font>Arial</font>
         <size>21</size>
         <text>&lt;b&gt;Nome:&lt;/b&gt;</text>
@@ -56,10 +56,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="6">
+    <text id="7">
         <class>Text</class>
         <x>20</x>
-        <y>260</y>
+        <y>280</y>
         <font>Arial</font>
         <size>21</size>
         <text>&lt;b&gt;Patologia:&lt;/b&gt;</text>
@@ -67,10 +67,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="7">
+    <text id="8">
         <class>Text</class>
-        <x>508</x>
-        <y>148</y>
+        <x>405</x>
+        <y>164</y>
         <font>Arial</font>
         <size>21</size>
         <text>&lt;b&gt;DN:&lt;/b&gt;</text>
@@ -78,10 +78,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="8">
+    <text id="9">
         <class>Text</class>
-        <x>672</x>
-        <y>148</y>
+        <x>640</x>
+        <y>164</y>
         <font>Arial</font>
         <size>21</size>
         <text>&lt;b&gt;Idade:&lt;/b&gt;</text>
@@ -89,10 +89,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="9">
+    <text id="10">
         <class>Text</class>
         <x>20</x>
-        <y>368</y>
+        <y>388</y>
         <font>Arial</font>
         <size>21</size>
         <text>&lt;b&gt;Cartão SUS:&lt;/b&gt;</text>
@@ -100,10 +100,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="10">
+    <text id="11">
         <class>Text</class>
         <x>370</x>
-        <y>368</y>
+        <y>388</y>
         <font>Arial</font>
         <size>21</size>
         <text>&lt;b&gt;RG:&lt;/b&gt;</text>
@@ -111,10 +111,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="11">
+    <text id="12">
         <class>Text</class>
         <x>584</x>
-        <y>368</y>
+        <y>388</y>
         <font>Arial</font>
         <size>21</size>
         <text>&lt;b&gt;CPF:&lt;/b&gt;</text>
@@ -122,10 +122,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="12">
+    <text id="13">
         <class>Text</class>
         <x>20</x>
-        <y>472</y>
+        <y>492</y>
         <font>Arial</font>
         <size>21</size>
         <text>&lt;b&gt;Responsável:&lt;/b&gt;</text>
@@ -133,21 +133,30 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="13">
+    <line id="14">
+        <class>Line</class>
+        <x>308</x>
+        <y>317</y>
+        <x2>186</x2>
+        <y2>324</y2>
+        <linewidth>1</linewidth>
+        <linecolor>#000000</linecolor>
+    </line>
+    <text id="15">
         <class>Text</class>
-        <x>89</x>
-        <y>148</y>
+        <x>115</x>
+        <y>170</y>
         <font>Arial</font>
         <size>21</size>
-        <text></text>
+        <text>{nome}</text>
         <color>#000000</color>
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="14">
+    <text id="16">
         <class>Text</class>
-        <x>548</x>
-        <y>148</y>
+        <x>467</x>
+        <y>168</y>
         <font>Arial</font>
         <size>21</size>
         <text>{data_nasc}</text>
@@ -155,32 +164,32 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="15">
-        <class>Text</class>
-        <x>740</x>
-        <y>148</y>
-        <font>Arial</font>
-        <size>21</size>
-        <text>{idade} anos</text>
-        <color>#000000</color>
-        <shadowoffset>0</shadowoffset>
-        <shadowcolor>#000000</shadowcolor>
-    </text>
-    <text id="16">
-        <class>Text</class>
-        <x>134</x>
-        <y>260</y>
-        <font>Arial</font>
-        <size>21</size>
-        <text>{patologia}</text>
-        <color>#000000</color>
-        <shadowoffset>0</shadowoffset>
-        <shadowcolor>#000000</shadowcolor>
-    </text>
     <text id="17">
         <class>Text</class>
-        <x>150</x>
-        <y>368</y>
+        <x>747</x>
+        <y>174</y>
+        <font>Arial</font>
+        <size>21</size>
+        <text>{idade}</text>
+        <color>#000000</color>
+        <shadowoffset>0</shadowoffset>
+        <shadowcolor>#000000</shadowcolor>
+    </text>
+    <text id="18">
+        <class>Text</class>
+        <x>156</x>
+        <y>287</y>
+        <font>Arial</font>
+        <size>21</size>
+        <text>patologia</text>
+        <color>#000000</color>
+        <shadowoffset>0</shadowoffset>
+        <shadowcolor>#000000</shadowcolor>
+    </text>
+    <text id="19">
+        <class>Text</class>
+        <x>164</x>
+        <y>390</y>
         <font>Arial</font>
         <size>21</size>
         <text>{cartao_sus}</text>
@@ -188,10 +197,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="18">
+    <text id="20">
         <class>Text</class>
-        <x>420</x>
-        <y>368</y>
+        <x>464</x>
+        <y>392</y>
         <font>Arial</font>
         <size>21</size>
         <text>{rg}</text>
@@ -199,10 +208,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="19">
+    <text id="21">
         <class>Text</class>
-        <x>644</x>
-        <y>368</y>
+        <x>712</x>
+        <y>392</y>
         <font>Arial</font>
         <size>21</size>
         <text>{cpf}</text>
@@ -210,33 +219,13 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="20">
+    <text id="22">
         <class>Text</class>
-        <x>170</x>
-        <y>472</y>
+        <x>206</x>
+        <y>494</y>
         <font>Arial</font>
         <size>21</size>
         <text>{responsavel}  {fone_responsavel}</text>
-        <color>#000000</color>
-        <shadowoffset>0</shadowoffset>
-        <shadowcolor>#000000</shadowcolor>
-    </text>
-    <line id="21">
-        <class>Line</class>
-        <x>20</x>
-        <y>120</y>
-        <x2>816</x2>
-        <y2>120</y2>
-        <linewidth>1</linewidth>
-        <linecolor>#000000</linecolor>
-    </line>
-    <text id="22">
-        <class>Text</class>
-        <x>90</x>
-        <y>150</y>
-        <font>Arial</font>
-        <size>21</size>
-        <text>{nome}</text>
         <color>#000000</color>
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>

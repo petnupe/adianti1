@@ -94,7 +94,7 @@ class PacienteFormList extends TPage
         $btn = $this->form->addAction(_t('Save'), new TAction([$this, 'onSave']), 'fa:save');
         $btn->class = 'btn btn-sm btn-primary';
         $this->form->addActionLink(_t('New'),  new TAction([$this, 'onEdit']), 'fa:eraser red');
-        $this->form->addAction(_t('Folha'),  new TAction([$this, 'onGenerateFolha']), 'fa:eraser red');
+        $this->form->addAction('Folha de cama',  new TAction([$this, 'onGenerateFolha']), 'fa:eraser red');
        
         // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);

@@ -1,9 +1,9 @@
 <?php
 /**
- * MedicamentoPacienteList Listing
+ * PatologiaPacienteList Listing
  * @author  <your name here>
  */
-class MedicamentoPacienteList extends TPage
+class PatologiaPacienteList extends TPage
 {
     protected $form;     // registration form
     protected $datagrid; // listing
@@ -21,7 +21,7 @@ class MedicamentoPacienteList extends TPage
         parent::__construct();
         
         $this->setDatabase('db');            // defines the database
-        $this->setActiveRecord('MedicamentoPaciente');   // defines the active record
+        $this->setActiveRecord('PatologiaPaciente');   // defines the active record
         $this->setDefaultOrder('id', 'asc');         // defines the default order
         $this->setLimit(100);
         // $this->setCriteria($criteria) // define a standard filter
@@ -29,47 +29,44 @@ class MedicamentoPacienteList extends TPage
         $this->addFilterField('paciente_id', '=', 'paciente_id'); // filterField, operator, formField
         
         // creates the form
-        $this->form = new BootstrapFormBuilder('form_search_MedicamentoPaciente');
-        $this->form->setFormTitle('Medicamentos para Paciente');
+        $this->form = new BootstrapFormBuilder('form_search_PatologiaPaciente');
+        $this->form->setFormTitle('Patologias do paciente');
+        
 
-        $paciente_id = $this->getComboPacientesAtivos();
+        // create the form fields
+        $paciente_id = new TDBCombo('paciente_id', 'db', 'Paciente', 'id', 'nome');
+
+
+        // add the fields
         $this->form->addFields( [ new TLabel('Paciente') ], [ $paciente_id ] );
+
+
+        // set sizes
         $paciente_id->setSize('100%');
 
+        
         // keep the form filled during navigation with session data
-       // $this->form->setData( TSession::getValue(__CLASS__.'_filter_data') );
+        $this->form->setData( TSession::getValue(__CLASS__.'_filter_data') );
         
         // add the search form actions
         $btn = $this->form->addAction(_t('Find'), new TAction([$this, 'onSearch']), 'fa:search');
         $btn->class = 'btn btn-sm btn-primary';
-        $this->form->addActionLink(_t('New'), new TAction(['MedicamentoPacienteForm', 'onEdit']), 'fa:plus green');
+        $this->form->addActionLink(_t('New'), new TAction(['PatologiaPacienteForm', 'onEdit']), 'fa:plus green');
         
         // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->style = 'width: 100%';
         $this->datagrid->datatable = 'true';
         // $this->datagrid->enablePopover('Popover', 'Hi <b> {name} </b>');
+        
 
         // creates the datagrid columns
-        $column_medicamento_id = new TDataGridColumn('medicamento_id', 'Medicamento', 'left');
-        $column_medicamento_id->setTransformer(array($this, 'getNomeMedicamento'));
-        $column_miligramas = new TDataGridColumn('miligramas', 'Miligramas', 'left');
-        $column_hora = new TDataGridColumn('hora', 'Hora', 'left');
-        $column_quantidade = new TDataGridColumn('quantidade', 'Quantidade', 'left');
-        $column_quantidade->setTransformer(array($this, 'getMedida'), $column_medicamento_id);
-
+        $column_patologia_id = new TDataGridColumn('patologia_id', 'Patologia Id', 'left');
+        $column_patologia_id->setTransformer([$this, 'getNomePatologia']);
         // add the columns to the DataGrid
-        $this->datagrid->addColumn($column_medicamento_id);
-        $this->datagrid->addColumn($column_miligramas);
-        $this->datagrid->addColumn($column_quantidade);
-        $this->datagrid->addColumn($column_hora);
-
-        // creates the datagrid column actions
-        $column_medicamento_id->setAction(new TAction([$this, 'onReload']), ['order' => 'medicamento_id']);
-        $column_hora->setAction(new TAction([$this, 'onReload']), ['order' => 'hora']);
-
+        $this->datagrid->addColumn($column_patologia_id);
         
-        $action1 = new TDataGridAction(['MedicamentoPacienteForm', 'onEdit'], ['id'=>'{id}']);
+        $action1 = new TDataGridAction(['PatologiaPacienteForm', 'onEdit'], ['id'=>'{id}']);
         $action2 = new TDataGridAction([$this, 'onDelete'], ['id'=>'{id}']);
         
         $this->datagrid->addAction($action1, _t('Edit'),   'far:edit blue');
@@ -83,11 +80,8 @@ class MedicamentoPacienteList extends TPage
         $this->pageNavigation->setAction(new TAction([$this, 'onReload']));
         
         $panel = new TPanelGroup('', 'white');
-        
-        if(trim($this->form->getData()->paciente_id)) {
-            $panel->add($this->datagrid);
-            $panel->addFooter($this->pageNavigation);
-        }
+        $panel->add($this->datagrid);
+        $panel->addFooter($this->pageNavigation);
         
         // header actions
         $dropdown = new TDropDown(_t('Export'), 'fa:list');
@@ -107,37 +101,12 @@ class MedicamentoPacienteList extends TPage
         parent::add($container);
     }
     
-    public function getNomeMedicamento($id = null) {
-        TTransaction::open('db');
-        $Medicamento = new Medicamento($id);
-        return $Medicamento->nome;
-        TTransaction::close();
-    }
+    public function getNomePatologia($id = null) {
     
-    public function getMedida($id = null, $medicamento = null) {
         TTransaction::open('db');
-        $Medicamento = new Medicamento($medicamento->medicamento_id);
-        return $id.'  '.$Medicamento->getMedida()->sigla;
+            $Patologia = new Patologia($id);
         TTransaction::close();
-    }
+        return $Patologia->nome;    
     
-    public function getComboPacientesAtivos() {
-        TTransaction::open('db');
-        $repo = new TRepository('Paciente');
-        $Criteria = new TCriteria;
-        $Criteria->add(new TFilter('ativo', '=', '1'));
-        $Criteria->setProperty('order', 'nome');
-        $Criteria->setProperty('direction','DESC');
-        $obj = $repo->load($Criteria);
-        TTransaction::close();
-        $combo = new TCombo('paciente_id');
-        $array = array();
-        foreach($obj as $o) {
-            $array[$o->id] = $o->nome;
-        }
-        $combo->addItems($array);
-        return $combo;
     }
 }
-
-

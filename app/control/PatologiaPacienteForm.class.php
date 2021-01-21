@@ -1,9 +1,9 @@
 <?php
 /**
- * MedicamentoPacienteForm Form
+ * PatologiaPacienteForm Form
  * @author  <your name here>
  */
-class MedicamentoPacienteForm extends TPage
+class PatologiaPacienteForm extends TPage
 {
     protected $form; // form
     
@@ -17,41 +17,32 @@ class MedicamentoPacienteForm extends TPage
         
         
         // creates the form
-        $this->form = new BootstrapFormBuilder('form_MedicamentoPaciente');
-        $this->form->setFormTitle('Cadastro de Medicamento para Pacientes');
+        $this->form = new BootstrapFormBuilder('form_PatologiaPaciente');
+        $this->form->setFormTitle('PatologiaPaciente');
         
 
         // create the form fields
-        $paciente_id = new TDBCombo('paciente_id', 'db', 'Paciente', 'id', 'nome', 'nome', 'nome');
-        $medicamento_id = new TDBCombo('medicamento_id', 'db', 'Medicamento', 'id', 'nome', 'nome', 'nome');
-        $medicamento_id->setChangeAction(new TAction(array($this, 'getMedidaMedicamento')));
-        $miligramas = new TEntry('miligramas');
-        $quantidade = new TEntry('quantidade');
-        $hora = new TEntry('hora');
+        $paciente_id = new TDBCombo('paciente_id', 'db', 'Paciente', 'id', 'nome', 'nome');
+        $patologia_id = new TDBCombo('patologia_id', 'db', 'Patologia', 'id', 'nome', 'nome');
 
 
         // add the fields
         $this->form->addFields( [ new TLabel('Paciente') ], [ $paciente_id ] );
-        $this->form->addFields( [ new TLabel('Medicamento') ], [ $medicamento_id ] );
-        $this->form->addFields( [ new TLabel('Miligramas') ], [ $miligramas ] );
-        
-        $lbMedida = new TLabel('');
-        $lbMedida->setId('lbMedida');
-        
-        
-        $this->form->addFields( [ new TLabel('Quantidade') ], [ $quantidade ], [$lbMedida] );
-        $this->form->addFields( [ new TLabel('Hora') ], [ $hora ] );
+        $this->form->addFields( [ new TLabel('Patologia') ], [ $patologia_id ] );
+
+        $paciente_id->addValidation('Paciente', new TRequiredValidator);
+        $patologia_id->addValidation('Patologia', new TRequiredValidator);
+
 
         // set sizes
-        $paciente_id->setSize('75%');
-        $medicamento_id->setSize('75%');
-        $miligramas->setSize('10%');
-        $quantidade->setSize('75%');
-        $hora->setSize('10%');
+        $paciente_id->setSize('100%');
+        $patologia_id->setSize('100%');
 
-        if (!empty($paciente_id))
+
+
+        if (!empty($id))
         {
-            $paciente_id->setEditable(true);
+            $id->setEditable(FALSE);
         }
         
         /** samples
@@ -92,11 +83,13 @@ class MedicamentoPacienteForm extends TPage
             $this->form->validate(); // validate form data
             $data = $this->form->getData(); // get form data as array
             
-            $object = new MedicamentoPaciente;  // create an empty object
+            $object = new PatologiaPaciente;  // create an empty object
             $object->fromArray( (array) $data); // load the object with data
             $object->store(); // save the object
             
-            // get the generated paciente_id
+            // get the generated id
+            //$data->id = $object->id;
+            
             $data->paciente_id = $object->paciente_id;
             
             $this->form->setData($data); // fill form data
@@ -105,6 +98,7 @@ class MedicamentoPacienteForm extends TPage
             new TMessage('info', AdiantiCoreTranslator::translate('Record saved'));
             
             $this->onReload($param);
+            
         }
         catch (Exception $e) // in case of exception
         {
@@ -135,7 +129,7 @@ class MedicamentoPacienteForm extends TPage
             {
                 $key = $param['key'];  // get the parameter $key
                 TTransaction::open('db'); // open a transaction
-                $object = new MedicamentoPaciente($key); // instantiates the Active Record
+                $object = new PatologiaPaciente($key); // instantiates the Active Record
                 $this->form->setData($object); // fill the form
                 TTransaction::close(); // close the transaction
             }
@@ -157,13 +151,6 @@ class MedicamentoPacienteForm extends TPage
         $data->paciente_id = $paciente_id;
         $this->form->clear();
         $this->form->setData($data);
-        
     }
-    
-    public static function getMedidaMedicamento($medicamento = null) {
-        TTransaction::open('db');
-        $Medicamento =  new Medicamento($medicamento['medicamento_id']);
-        TScript::create("$('#lbMedida').html('".$Medicamento->getMedida()->descricao."');");
-        TTransaction::close();
-    }
+
 }

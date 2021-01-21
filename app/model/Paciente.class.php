@@ -9,7 +9,6 @@ class Paciente extends TRecord
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     
-    
     /**
      * Constructor method
      */
@@ -26,6 +25,18 @@ class Paciente extends TRecord
         parent::addAttribute('ativo');
         parent::addAttribute('alfabetizado');
     }
+    
+    public function getPatologias() {
+        TTransaction::open('db');
+        $Repo = new TRepository('PatologiaPaciente');
+        $Criteria =  new TCriteria;
+        $Criteria->add(new TFilter('paciente_id', '=' , $this->id));
+        $Patologias = $Repo->load($Criteria, false);
 
-
+        foreach ($Patologias as $Patologia) {
+            $a[] = $Patologia->Patologia->nome;    
+        }
+        return $a;
+        TTransaction::close();
+    }
 }

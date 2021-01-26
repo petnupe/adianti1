@@ -95,6 +95,9 @@ class PacienteFormList extends TPage
         $btn->class = 'btn btn-sm btn-primary';
         $this->form->addActionLink(_t('New'),  new TAction([$this, 'onEdit']), 'fa:eraser red');
         $this->form->addAction('Folha de cama',  new TAction([$this, 'onGenerateFolha']), 'fa:eraser red');
+        
+        
+        $this->form->addAction('Patologias', new TAction(array($this, 'goToPatologiasList')), 'fa:bug red');
        
         // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
@@ -162,6 +165,13 @@ class PacienteFormList extends TPage
     /**
      * Load the datagrid with data
      */
+     
+     public function goToPatologiasList() {
+         //new TMessage('info', 'lalal');
+         TApplication::gotoPage('PatologiaPacienteList');
+
+     
+     }
     public function onReload($param = NULL)
     {
         try
@@ -369,10 +379,15 @@ class PacienteFormList extends TPage
         $patologias = implode(', ', $Paciente->getPatologias());
         $Responsavel = $Paciente->getResponsavel();
         TTransaction::close();
+             
+        if(count($Responsavel) > 0) {
+            $Parentesco = $Responsavel[0]->getParentesco();
+            $responsavel = $Responsavel[0]->nome.' ('.$Parentesco->nome.')';
+            $fone_responsavel = $Responsavel[0]->telefone;
+        }
         
-        $Parentesco = $Responsavel[0]->getParentesco();
-        $designer->replace('{responsavel}', $Responsavel[0]->nome.' ('.$Parentesco->nome.')');
-        $designer->replace('{fone_responsavel}', $Responsavel[0]->telefone);
+        $designer->replace('{responsavel}', @$responsavel);
+        $designer->replace('{fone_responsavel}', @$fone_responsavel);
         $designer->replace('{patologia}', utf8_decode($patologias));
     
         $this->form->setData($data);    

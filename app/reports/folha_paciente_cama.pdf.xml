@@ -4,15 +4,7 @@
         <format>a4</format>
         <orientation>L</orientation>
     </page>
-    <image id="1">
-        <class>Image</class>
-        <x>12</x>
-        <y>12</y>
-        <width>185</width>
-        <height>104</height>
-        <file>C:\Users\Peterson\Desktop\adianti1\app\images\logo.png</file>
-    </image>
-    <text id="2">
+    <text id="1">
         <class>Text</class>
         <x>312</x>
         <y>40</y>
@@ -23,7 +15,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="3">
+    <text id="2">
         <class>Text</class>
         <x>560</x>
         <y>24</y>
@@ -34,7 +26,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="4">
+    <text id="3">
         <class>Text</class>
         <x>460</x>
         <y>66</y>
@@ -45,18 +37,18 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="5">
+    <text id="4">
         <class>Text</class>
         <x>20</x>
         <y>150</y>
         <font>Arial</font>
-        <size>21</size>
+        <size>30</size>
         <text>&lt;b&gt;Nome:&lt;/b&gt;</text>
         <color>#000000</color>
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="6">
+    <text id="5">
         <class>Text</class>
         <x>20</x>
         <y>260</y>
@@ -67,10 +59,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="7">
+    <text id="6">
         <class>Text</class>
         <x>508</x>
-        <y>148</y>
+        <y>260</y>
         <font>Arial</font>
         <size>21</size>
         <text>&lt;b&gt;DN:&lt;/b&gt;</text>
@@ -78,10 +70,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="8">
+    <text id="7">
         <class>Text</class>
         <x>672</x>
-        <y>148</y>
+        <y>260</y>
         <font>Arial</font>
         <size>21</size>
         <text>&lt;b&gt;Idade:&lt;/b&gt;</text>
@@ -89,7 +81,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="9">
+    <text id="8">
         <class>Text</class>
         <x>20</x>
         <y>368</y>
@@ -100,7 +92,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="10">
+    <text id="9">
         <class>Text</class>
         <x>370</x>
         <y>368</y>
@@ -111,7 +103,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="11">
+    <text id="10">
         <class>Text</class>
         <x>584</x>
         <y>368</y>
@@ -122,7 +114,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="12">
+    <text id="11">
         <class>Text</class>
         <x>20</x>
         <y>472</y>
@@ -133,7 +125,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="13">
+    <text id="12">
         <class>Text</class>
         <x>89</x>
         <y>148</y>
@@ -144,10 +136,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="14">
+    <text id="13">
         <class>Text</class>
         <x>548</x>
-        <y>148</y>
+        <y>260</y>
         <font>Arial</font>
         <size>21</size>
         <text>{data_nasc}</text>
@@ -155,10 +147,10 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="15">
+    <text id="14">
         <class>Text</class>
         <x>740</x>
-        <y>148</y>
+        <y>260</y>
         <font>Arial</font>
         <size>21</size>
         <text>{idade} anos</text>
@@ -166,7 +158,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="16">
+    <text id="15">
         <class>Text</class>
         <x>134</x>
         <y>260</y>
@@ -177,7 +169,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="17">
+    <text id="16">
         <class>Text</class>
         <x>150</x>
         <y>368</y>
@@ -188,7 +180,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="18">
+    <text id="17">
         <class>Text</class>
         <x>420</x>
         <y>368</y>
@@ -199,7 +191,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="19">
+    <text id="18">
         <class>Text</class>
         <x>644</x>
         <y>368</y>
@@ -210,7 +202,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <text id="20">
+    <text id="19">
         <class>Text</class>
         <x>170</x>
         <y>472</y>
@@ -221,7 +213,7 @@
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
-    <line id="21">
+    <line id="20">
         <class>Line</class>
         <x>20</x>
         <y>120</y>
@@ -230,15 +222,23 @@
         <linewidth>1</linewidth>
         <linecolor>#000000</linecolor>
     </line>
-    <text id="22">
+    <text id="21">
         <class>Text</class>
-        <x>90</x>
-        <y>150</y>
+        <x>132</x>
+        <y>152</y>
         <font>Arial</font>
-        <size>21</size>
+        <size>30</size>
         <text>{nome}</text>
         <color>#000000</color>
         <shadowoffset>0</shadowoffset>
         <shadowcolor>#000000</shadowcolor>
     </text>
+    <image id="22">
+        <class>Image</class>
+        <x>19</x>
+        <y>8</y>
+        <width>185</width>
+        <height>104</height>
+        <file>E:\Nova pasta\adianti1\app\images\logo.png</file>
+    </image>
 </design>

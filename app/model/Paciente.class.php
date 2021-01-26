@@ -33,10 +33,24 @@ class Paciente extends TRecord
         $Criteria->add(new TFilter('paciente_id', '=' , $this->id));
         $Patologias = $Repo->load($Criteria, false);
 
+        $a = array();
+
         foreach ($Patologias as $Patologia) {
             $a[] = $Patologia->Patologia->nome;    
         }
         return $a;
         TTransaction::close();
+    }
+    
+    public function getResponsavel() {
+    
+        TTransaction::open('db');
+        
+        $Repo = new TRepository('Responsavel');
+        $Criteria = new TCriteria;
+        $Criteria->add(new TFilter('paciente_id', '=', $this->id));
+        $Responsavel = $Repo->load($Criteria);
+        TTransaction::close();
+        return $Responsavel;            
     }
 }

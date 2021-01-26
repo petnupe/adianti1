@@ -1,10 +1,9 @@
 <?php
 /**
- * PacienteFormList Form List
+ * ParentescoFormList Form List
  * @author  <your name here>
  */
- 
-class PacienteFormList extends TPage
+class ParentescoFormList extends TPage
 {
     protected $form; // form
     protected $datagrid; // datagrid
@@ -19,66 +18,27 @@ class PacienteFormList extends TPage
     {
         parent::__construct();
         
-        $this->form = new BootstrapFormBuilder('form_Paciente');
-        $this->form->setFormTitle('Cadastro de Pacientes');
-       
+        
+        $this->form = new BootstrapFormBuilder('form_Parentesco');
+        $this->form->setFormTitle('Parentesco');
+        
 
         // create the form fields
         $id = new THidden('id');
         $nome = new TEntry('nome');
-        
-        $dataNasc = new TDate('dataNasc');
-        $dataNasc->setValue('01/01/1950');
-        $dataNasc->setMask('dd/mm/yyyy');
-        
-        $cartaoSus = new TEntry('cartaoSus');
-        $rg = new TEntry('rg');
-        $cpf = new TEntry('cpf');
-        $cpf->setMask('000.000.000-00');
-        $cpf->addValidation('CPF', new TCPFValidator);
-        
-        $dataEntrada = new TDate('dataEntrada');
-        $dataEntrada->setMask('dd/mm/yyyy');
-        $dataEntrada->setEditable(FALSE);
-        $dataEntrada->setValue(date('d/m/Y'));
-        
-        $genero = new TCombo('genero');
-        $genero->addItems(array('F' => 'Feminino', 'M' => 'Masculino'));
-        $genero->setDefaultOption(false);
-        
-        $ativo = new TCombo('ativo');
-        $ativo->addItems(array(1 => 'Ativo', 0 => 'Inativo'));
-        $ativo->setDefaultOption(false);
-        
-        $alfabetizado = new TCombo('alfabetizado');
-        $alfabetizado->addItems(array(1 => 'Sim', 0 => 'Não'));
-        $alfabetizado->setDefaultOption(false);
 
 
         // add the fields
-        $this->form->addFields([ $id ] );
-        $this->form->addFields( [ new TLabel('Nome') ], [ $nome ],[ new TLabel('Data nasc.') ], [ $dataNasc ] );
-        $this->form->addFields( [ new TLabel('Cartao SUS') ], [ $cartaoSus ] ,[ new TLabel('RG') ], [ $rg ] );
-        $this->form->addFields( [ new TLabel('CPF') ], [ $cpf ] , [ new TLabel('Cadastro') ], [ $dataEntrada ] );
-        $this->form->addFields([ new TLabel('Genero') ], [ $genero ] , [ new TLabel('Ativo') ], [ $ativo ] );
-        $this->form->addFields( [ new TLabel('Alfabetizado') ], [ $alfabetizado ] );
+        $this->form->addFields( [ new TLabel('') ], [ $id ] );
+        $this->form->addFields( [ new TLabel('Nome') ], [ $nome ] );
 
-        $nome->addValidation('Nome', new TRequiredValidator);
-        $dataNasc->addValidation('Data nasc.', new TRequiredValidator);
-        $genero->addValidation('Genero', new TRequiredValidator);
 
 
         // set sizes
-        $id->setSize('10%');
-        $nome->setSize('75%');
-        $dataNasc->setSize('75%');
-        $cartaoSus->setSize('75%');
-        $rg->setSize('75%');
-        $cpf->setSize('75%');
-        $dataEntrada->setSize('75%');
-        $genero->setSize('75%');
-        $ativo->setSize('75%');
-        $alfabetizado->setSize('10%');
+        $id->setSize('100%');
+        $nome->setSize('100%');
+
+
 
         if (!empty($id))
         {
@@ -94,8 +54,7 @@ class PacienteFormList extends TPage
         $btn = $this->form->addAction(_t('Save'), new TAction([$this, 'onSave']), 'fa:save');
         $btn->class = 'btn btn-sm btn-primary';
         $this->form->addActionLink(_t('New'),  new TAction([$this, 'onEdit']), 'fa:eraser red');
-        $this->form->addAction('Folha de cama',  new TAction([$this, 'onGenerateFolha']), 'fa:eraser red');
-       
+        
         // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->style = 'width: 100%';
@@ -104,23 +63,14 @@ class PacienteFormList extends TPage
         
 
         // creates the datagrid columns
-        $column_id = new TDataGridColumn('id', 'Id', 'left');
+        $column_id = new TDataGridColumn('id', '', 'left');
         $column_nome = new TDataGridColumn('nome', 'Nome', 'left');
-        $column_dataNasc = new TDataGridColumn('dataNasc', 'Data nasc.', 'left');
-        $column_cartaoSus = new TDataGridColumn('cartaoSus', 'Cartao SUS', 'left');
-        $column_cpf = new TDataGridColumn('cpf', 'CPF', 'left');
-        $column_ativo = new TDataGridColumn('ativo', 'Ativo', 'left');
-        $column_ativo->setTransformer(array($this, 'getNomeSituacao'));
-
 
 
         // add the columns to the DataGrid
         $this->datagrid->addColumn($column_id);
         $this->datagrid->addColumn($column_nome);
-        $this->datagrid->addColumn($column_dataNasc);
-        $this->datagrid->addColumn($column_cartaoSus);
-        $this->datagrid->addColumn($column_cpf);
-        $this->datagrid->addColumn($column_ativo);
+
         
         // creates two datagrid actions
         $action1 = new TDataGridAction([$this, 'onEdit']);
@@ -169,9 +119,9 @@ class PacienteFormList extends TPage
             // open a transaction with database 'db'
             TTransaction::open('db');
             
-            // creates a repository for Paciente
-            $repository = new TRepository('Paciente');
-            $limit = 20;
+            // creates a repository for Parentesco
+            $repository = new TRepository('Parentesco');
+            $limit = 10;
             // creates a criteria
             $criteria = new TCriteria;
             
@@ -242,7 +192,7 @@ class PacienteFormList extends TPage
         {
             $key = $param['key']; // get the parameter $key
             TTransaction::open('db'); // open a transaction with database
-            $object = new Paciente($key, FALSE); // instantiates the Active Record
+            $object = new Parentesco($key, FALSE); // instantiates the Active Record
             $object->delete(); // deletes the object from the database
             TTransaction::close(); // close the transaction
             
@@ -274,26 +224,20 @@ class PacienteFormList extends TPage
             
             $this->form->validate(); // validate form data
             $data = $this->form->getData(); // get form data as array
-            $data->nome = strtoupper($data->nome);
-            $object = new Paciente;  // create an empty object
             
-            
-            
-            //unset((array)$data['dataEntrada']);
-            
+            $object = new Parentesco;  // create an empty object
             $object->fromArray( (array) $data); // load the object with data
             $object->store(); // save the object
             
             // get the generated id
             $data->id = $object->id;
             
-            
             $this->form->setData($data); // fill form data
             TTransaction::close(); // close the transaction
             
-            $action = new TAction(array($this, 'onClear'));
-            new TMessage('info', AdiantiCoreTranslator::translate('Record saved'), $action); // success message
+            new TMessage('info', AdiantiCoreTranslator::translate('Record saved'), new TAction([$this, 'onEdit'])); // success message
             $this->onReload(); // reload the listing
+            
         }
         catch (Exception $e) // in case of exception
         {
@@ -324,7 +268,7 @@ class PacienteFormList extends TPage
             {
                 $key = $param['key'];  // get the parameter $key
                 TTransaction::open('db'); // open a transaction
-                $object = new Paciente($key); // instantiates the Active Record
+                $object = new Parentesco($key); // instantiates the Active Record
                 $this->form->setData($object); // fill the form
                 TTransaction::close(); // close the transaction
             }
@@ -340,48 +284,6 @@ class PacienteFormList extends TPage
         }
     }
     
-    public function getNomeSituacao($id) {
-        $situacoes = [0 => 'Inativo', 1 => 'Ativo'];
-        return $situacoes[$id];
-    }
-    
-    public function onGenerateFolha() {
-    
-        $data = $this->form->getData();
-    
-        if(!$data->nome) {
-            new TMessage('error', 'Selecione um paciente para gerar sua folha!');
-            return ;
-        }
-        
-        //$data = array_map('utf8_decode', $data);
-        $designer = new TPDFDesigner;
-        $designer->fromXml('app/reports/folha_paciente_cama.pdf.xml');
-        $designer->replace('{nome}', utf8_decode($data->nome));
-        $designer->replace('{data_nasc}', $data->dataNasc);
-        $designer->replace('{idade}', $this->getIdade( $data->dataNasc));
-        $designer->replace('{cartao_sus}', $data->cartaoSus);
-        $designer->replace('{rg}', $data->rg);
-        $designer->replace('{cpf}', $data->cpf);
-        
-        TTransaction::open('db');
-        $Paciente = new Paciente($data->id);
-        $patologias = implode(', ', $Paciente->getPatologias());
-        $Responsavel = $Paciente->getResponsavel();
-        TTransaction::close();
-        
-        $Parentesco = $Responsavel[0]->getParentesco();
-        $designer->replace('{responsavel}', $Responsavel[0]->nome.' ('.$Parentesco->nome.')');
-        $designer->replace('{fone_responsavel}', $Responsavel[0]->telefone);
-        $designer->replace('{patologia}', utf8_decode($patologias));
-    
-        $this->form->setData($data);    
-            
-        $designer->generate();
-        $designer->save('app/output/folha_paciente.pdf');
-        parent::openFile('app/output/folha_paciente.pdf');
-    }
-    
     /**
      * method show()
      * Shows the page
@@ -394,20 +296,5 @@ class PacienteFormList extends TPage
             $this->onReload( func_get_arg(0) );
         }
         parent::show();
-    }
-    
-    public function getIdade($data) {
-    list($dia, $mes, $ano) = explode('/', $data);
-
-    // data atual
-    $hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-    // Descobre a unix timestamp da data de nascimento do fulano
-    $nascimento = mktime( 0, 0, 0, $mes, $dia, $ano);
-
-    // cálculo
-    $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
-     return $idade;
-    
-    
     }
 }

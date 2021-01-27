@@ -97,15 +97,15 @@ class PacienteFormList extends TPage
         $this->form->addAction('Folha de cama',  new TAction([$this, 'onGenerateFolha']), 'fa:eraser red');
         
         
-        $this->form->addAction('Patologias', new TAction(array($this, 'goToPatologiasList')), 'fa:bug red');
+        $patologiaAction = new TAction(['PatologiaPacienteList', 'peterson'], ['paciente_id' => @$param['id']]);
+
+        
+        $this->form->addActionLink('Patologias',  $patologiaAction, 'fa:bug red');
        
         // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->style = 'width: 100%';
-        // $this->datagrid->datatable = 'true';
-        // $this->datagrid->enablePopover('Popover', 'Hi <b> {name} </b>');
         
-
         // creates the datagrid columns
         $column_id = new TDataGridColumn('id', 'Id', 'left');
         $column_nome = new TDataGridColumn('nome', 'Nome', 'left');
@@ -114,8 +114,6 @@ class PacienteFormList extends TPage
         $column_cpf = new TDataGridColumn('cpf', 'CPF', 'left');
         $column_ativo = new TDataGridColumn('ativo', 'Ativo', 'left');
         $column_ativo->setTransformer(array($this, 'getNomeSituacao'));
-
-
 
         // add the columns to the DataGrid
         $this->datagrid->addColumn($column_id);
@@ -165,13 +163,7 @@ class PacienteFormList extends TPage
     /**
      * Load the datagrid with data
      */
-     
-     public function goToPatologiasList() {
-         //new TMessage('info', 'lalal');
-         TApplication::gotoPage('PatologiaPacienteList');
 
-     
-     }
     public function onReload($param = NULL)
     {
         try
@@ -188,7 +180,7 @@ class PacienteFormList extends TPage
             // default order
             if (empty($param['order']))
             {
-                $param['order'] = 'id';
+                $param['order'] = 'nome';
                 $param['direction'] = 'asc';
             }
             $criteria->setProperties($param); // order, offset

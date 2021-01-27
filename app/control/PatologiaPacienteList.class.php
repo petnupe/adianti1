@@ -13,18 +13,13 @@ class PatologiaPacienteList extends TPage
     
     use Adianti\base\AdiantiStandardListTrait;
     
-    /**
-     * Page constructor
-     */
     public function __construct()
     {
         parent::__construct();
-        
         $this->setDatabase('db');            // defines the database
         $this->setActiveRecord('PatologiaPaciente');   // defines the active record
         $this->setDefaultOrder('id', 'asc');         // defines the default order
         $this->setLimit(100);
-        // $this->setCriteria($criteria) // define a standard filter
 
         $this->addFilterField('paciente_id', '=', 'paciente_id'); // filterField, operator, formField
         
@@ -34,34 +29,29 @@ class PatologiaPacienteList extends TPage
         
 
         // create the form fields
-        $paciente_id = new TDBCombo('paciente_id', 'db', 'Paciente', 'id', 'nome');
-
+        $paciente_id = new TDBCombo('paciente_id', 'db', 'Paciente', 'id', 'nome', 'nome');
 
         // add the fields
         $this->form->addFields( [ new TLabel('Paciente') ], [ $paciente_id ] );
 
-
         // set sizes
         $paciente_id->setSize('100%');
 
-        
         // keep the form filled during navigation with session data
-        $this->form->setData( TSession::getValue(__CLASS__.'_filter_data') );
+        //$this->form->setData( TSession::getValue(__CLASS__.'_filter_data') );
         
         // add the search form actions
         $btn = $this->form->addAction(_t('Find'), new TAction([$this, 'onSearch']), 'fa:search');
         $btn->class = 'btn btn-sm btn-primary';
         $this->form->addActionLink(_t('New'), new TAction(['PatologiaPacienteForm', 'onEdit']), 'fa:plus green');
         
+        
         // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->style = 'width: 100%';
         $this->datagrid->datatable = 'true';
-        // $this->datagrid->enablePopover('Popover', 'Hi <b> {name} </b>');
-        
 
-        // creates the datagrid columns
-        $column_patologia_id = new TDataGridColumn('patologia_id', 'Patologia Id', 'left');
+        $column_patologia_id = new TDataGridColumn('patologia_id', 'Patologia', 'left');
         $column_patologia_id->setTransformer([$this, 'getNomePatologia']);
         // add the columns to the DataGrid
         $this->datagrid->addColumn($column_patologia_id);
@@ -102,11 +92,23 @@ class PatologiaPacienteList extends TPage
     }
     
     public function getNomePatologia($id = null) {
-    
         TTransaction::open('db');
             $Patologia = new Patologia($id);
         TTransaction::close();
         return $Patologia->nome;    
-    
+
     }
+    public function peterson($param = null) {
+        $data = $this->form->getData();
+        $data->paciente_id = $param['paciente_id'];
+        $this->form->setData($data);
+
+
+        //$this->onReload((array)$data);
+        //$this->onSearch();
+        $this->datagrid->clear();
+        $this->datagrid->createModel();
+        
+        $this->onReload(func_get_arg(0)['paciente_id']);
+    } 
 }

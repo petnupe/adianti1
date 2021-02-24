@@ -97,7 +97,7 @@ class PacienteFormList extends TPage
         $this->form->addAction('Folha de cama',  new TAction([$this, 'onGenerateFolha']), 'fa:eraser red');
         
         
-        $patologiaAction = new TAction(['PatologiaPacienteList', 'peterson'], ['paciente_id' => @$param['id']]);
+        $patologiaAction = new TAction(['PatologiaPacienteListManual', 'onReload'], ['paciente_id' => @$param['id']]);
 
         
         $this->form->addActionLink('Patologias',  $patologiaAction, 'fa:bug red');

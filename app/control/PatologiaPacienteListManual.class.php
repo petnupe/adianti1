@@ -8,7 +8,7 @@ class PatologiaPacienteListManual extends TPage
     {
         parent::__construct();
         $this->form = new BootstrapFormBuilder('form_PatologiaPaciente');
-        $this->form->setFormTitle('Titulo do form');
+        $this->form->setFormTitle('Patologias por paciente');
         
         $paciente_id = new TDBCombo('paciente_id', 'db', 'Paciente', 'id', 'nome', 'nome');
         
@@ -16,11 +16,8 @@ class PatologiaPacienteListManual extends TPage
         $paciente_id->setChangeAction($change_action);
         
         $this->form->addFields( [ new TLabel('Paciente') ], [ $paciente_id ] );
-        
         $btnFind = $this->form->addAction(_t('Find'), new TAction([$this, 'onReload']), 'fa:search');
-        
         $btnNew = $this->form->addAction(_t('New'), new TAction(['PatologiaPacienteForm', 'onReload']), 'fa:eraser red');
-        
 
         $this->createDataGrid();
         $panel = new TPanel('', 'white');
@@ -38,7 +35,7 @@ class PatologiaPacienteListManual extends TPage
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->style = 'width: 100%';
         $this->datagrid->datatable = 'true';
-        $column_patologia_id = new TDataGridColumn('patologia_id', 'Patologia', 'left');
+        $column_patologia_id = new TDataGridColumn('patologia_id', 'Patologias', 'left');
         $column_patologia_id->setTransformer([$this, 'getNomePatologia']);
         $this->datagrid->addColumn($column_patologia_id);
 
@@ -54,7 +51,7 @@ class PatologiaPacienteListManual extends TPage
     function onReload($param = null)
     {
         $dados = $this->form->getData();
-        $dados->paciente_id =  empty($param['paciente_id']) ? $param[1]['key'] : $param['paciente_id'];
+        $dados->paciente_id =  empty($param['paciente_id']) ? $param['key'] : $param['paciente_id'];
         
         $this->form->setData($dados);
        
@@ -86,9 +83,7 @@ class PatologiaPacienteListManual extends TPage
     }
     
     function onDelete($obj = null) {
-    
-    parent::onDelete($obj);
-    
+        parent::onDelete($obj);
     }
     
     public function onEdit(){}

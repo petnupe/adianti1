@@ -17,11 +17,8 @@ class PatologiaPacienteFormList extends TPage
     public function __construct( $param )
     {
         parent::__construct();
-        
-        
         $this->form = new BootstrapFormBuilder('form_PatologiaPaciente');
-        $this->form->setFormTitle('PatologiaPaciente');
-        
+        $this->form->setFormTitle('Patologias do paciente');
 
         // create the form fields
         $id = new THidden('id');
@@ -43,10 +40,7 @@ class PatologiaPacienteFormList extends TPage
         $paciente_id->setSize('100%');
         $patologia_id->setSize('100%');
 
-
-
-        if (!empty($id))
-        {
+        if (!empty($id)) {
             $id->setEditable(FALSE);
         }
         

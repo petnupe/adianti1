@@ -18,7 +18,7 @@ class PatologiaPacienteForm extends TPage
         
         // creates the form
         $this->form = new BootstrapFormBuilder('form_PatologiaPaciente');
-        $this->form->setFormTitle('PatologiaPaciente');
+        $this->form->setFormTitle('Patologias por paciente');
         
 
         // create the form fields

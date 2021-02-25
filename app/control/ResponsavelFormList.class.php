@@ -28,14 +28,20 @@ class ResponsavelFormList extends TPage
         $nome = new TEntry('nome');
         $parentesco_id = new TDBCombo('parentesco_id', 'db', 'Parentesco', 'id', 'nome', 'nome');
         $paciente_id = new TDBCombo('paciente_id', 'db', 'Paciente', 'id', 'nome', 'nome');
+        
+        
+        $change_action = new TAction(array($this, 'onChangePaciente'));
+        $paciente_id->setChangeAction($change_action);
+        
+        
         $telefone = new TEntry('telefone');
         $telefone->setMask('99-999999999');
 
 
         // add the fields
         $this->form->addFields( [ new TLabel('') ], [ $id ] );
-        $this->form->addFields( [ new TLabel('Nome') ], [ $nome ] );
         $this->form->addFields( [ new TLabel('Paciente') ], [ $paciente_id ] );
+        $this->form->addFields( [ new TLabel('Nome') ], [ $nome ] );
         $this->form->addFields( [ new TLabel('Parentesco') ], [ $parentesco_id ] );
         $this->form->addFields( [ new TLabel('Telefone') ], [ $telefone ] );
 
@@ -51,10 +57,7 @@ class ResponsavelFormList extends TPage
         $paciente_id->setSize('100%');
         $telefone->setSize('100%');
 
-
-
-        if (!empty($id))
-        {
+        if (!empty($id)) {
             $id->setEditable(FALSE);
         }
         
@@ -147,6 +150,15 @@ class ResponsavelFormList extends TPage
             // creates a criteria
             $criteria = new TCriteria;
             
+            
+            if(!empty($param['paciente_id'])) {
+                $criteria->add(new TFilter('paciente_id', '=', $param['paciente_id']));
+                $data = $this->form->getData();
+                $data->paciente_id = $param['paciente_id'];
+                $this->form->setData($data);
+            }
+            
+
             // default order
             if (empty($param['order']))
             {
@@ -311,5 +323,9 @@ class ResponsavelFormList extends TPage
     public function getNomePaciente($id) {
         $Paciente = new Paciente($id);
         return $Paciente->nome;
+    }
+    
+    public static function onChangePaciente($obj) {
+        AdiantiCoreApplication::gotoPage(__CLASS__, 'onReload', ['paciente_id' => $obj['paciente_id']]);
     }
 }

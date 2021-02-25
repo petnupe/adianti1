@@ -94,13 +94,6 @@ class PacienteFormList extends TPage
         $btn = $this->form->addAction(_t('Save'), new TAction([$this, 'onSave']), 'fa:save');
         $btn->class = 'btn btn-sm btn-primary';
         $this->form->addActionLink(_t('New'),  new TAction([$this, 'onEdit']), 'fa:eraser red');
-        $this->form->addAction('Folha de cama',  new TAction([$this, 'onGenerateFolha']), 'fa:eraser red');
-        
-        
-        $patologiaAction = new TAction(['PatologiaPacienteListManual', 'onReload'], ['paciente_id' => @$param['id']]);
-
-        
-        $this->form->addActionLink('Patologias',  $patologiaAction, 'fa:bug red');
        
         // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
@@ -110,39 +103,55 @@ class PacienteFormList extends TPage
         $column_id = new TDataGridColumn('id', 'Id', 'left');
         $column_nome = new TDataGridColumn('nome', 'Nome', 'left');
         $column_dataNasc = new TDataGridColumn('dataNasc', 'Data nasc.', 'left');
-        $column_cartaoSus = new TDataGridColumn('cartaoSus', 'Cartao SUS', 'left');
+        //$column_cartaoSus = new TDataGridColumn('cartaoSus', 'Cartao SUS', 'left');
         $column_cpf = new TDataGridColumn('cpf', 'CPF', 'left');
         $column_ativo = new TDataGridColumn('ativo', 'Ativo', 'left');
         $column_ativo->setTransformer(array($this, 'getNomeSituacao'));
 
         // add the columns to the DataGrid
-        $this->datagrid->addColumn($column_id);
+        //$this->datagrid->addColumn($column_id);
         $this->datagrid->addColumn($column_nome);
         $this->datagrid->addColumn($column_dataNasc);
-        $this->datagrid->addColumn($column_cartaoSus);
+        //$this->datagrid->addColumn($column_cartaoSus);
         $this->datagrid->addColumn($column_cpf);
         $this->datagrid->addColumn($column_ativo);
         
         // creates two datagrid actions
         $action1 = new TDataGridAction([$this, 'onEdit']);
-        //$action1->setUseButton(TRUE);
-        //$action1->setButtonClass('btn btn-default');
         $action1->setLabel(_t('Edit'));
         $action1->setImage('far:edit blue');
         $action1->setField('id');
         
         $action2 = new TDataGridAction([$this, 'onDelete']);
-        //$action2->setUseButton(TRUE);
-        //$action2->setButtonClass('btn btn-default');
         $action2->setLabel(_t('Delete'));
         $action2->setImage('far:trash-alt red');
         $action2->setField('id');
+
+        $action3 = new TDataGridAction([$this, 'goToPatologias']);
+        $action3->setLabel('Patologias');
+        $action3->setImage('fa: fa-bug red');
+        $action3->setField('id');
+        
+        $action4 = new TDataGridAction([$this, 'onGenerateFolha']);
+        $action4->setLabel('Folha cama');
+        $action4->setImage('fa: fa-newspaper green');
+        $action4->setField('id');
         
         // add the actions to the datagrid
-        $this->datagrid->addAction($action1);
-        $this->datagrid->addAction($action2);
+        
+        $actionGroup = new TDataGridActionGroup(null, 'fa:bars green');
+        $actionGroup->addAction($action1);
+        $actionGroup->addAction($action2);
+        $actionGroup->addAction($action3);
+        $actionGroup->addAction($action4);
+        
+        //$this->datagrid->addAction($action1);
+        //$this->datagrid->addAction($action2);
+        //$this->datagrid->addAction($action3);
+        //$this->datagrid->addAction($action4);
         
         // create the datagrid model
+        $this->datagrid->addActionGroup($actionGroup);
         $this->datagrid->createModel();
         
         // creates the page navigation
@@ -347,27 +356,20 @@ class PacienteFormList extends TPage
         return $situacoes[$id];
     }
     
-    public function onGenerateFolha() {
-    
-        $data = $this->form->getData();
-    
-        if(!$data->nome) {
-            new TMessage('error', 'Selecione um paciente para gerar sua folha!');
-            return ;
-        }
+    public function onGenerateFolha($obj) {
+       
+        TTransaction::open('db');
         
-        //$data = array_map('utf8_decode', $data);
+        $Paciente = new Paciente($obj['id']);
         $designer = new TPDFDesigner;
         $designer->fromXml('app/reports/folha_paciente_cama.pdf.xml');
-        $designer->replace('{nome}', utf8_decode($data->nome));
-        $designer->replace('{data_nasc}', $data->dataNasc);
-        $designer->replace('{idade}', $this->getIdade( $data->dataNasc));
-        $designer->replace('{cartao_sus}', $data->cartaoSus);
-        $designer->replace('{rg}', $data->rg);
-        $designer->replace('{cpf}', $data->cpf);
+        $designer->replace('{nome}', utf8_decode($Paciente->nome));
+        $designer->replace('{data_nasc}', $Paciente->dataNasc);
+        $designer->replace('{idade}', $this->getIdade( $Paciente->dataNasc));
+        $designer->replace('{cartao_sus}', $Paciente->cartaoSus);
+        $designer->replace('{rg}', $Paciente->rg);
+        $designer->replace('{cpf}', $Paciente->cpf);
         
-        TTransaction::open('db');
-        $Paciente = new Paciente($data->id);
         $patologias = implode(', ', $Paciente->getPatologias());
         $Responsavel = $Paciente->getResponsavel();
         TTransaction::close();
@@ -382,7 +384,7 @@ class PacienteFormList extends TPage
         $designer->replace('{fone_responsavel}', @$fone_responsavel);
         $designer->replace('{patologia}', utf8_decode($patologias));
     
-        $this->form->setData($data);    
+        $this->form->setData($Paciente);    
             
         $designer->generate();
         $designer->save('app/output/folha_paciente.pdf');
@@ -414,7 +416,9 @@ class PacienteFormList extends TPage
     // cálculo
     $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
      return $idade;
+    }
     
-    
+    public function goToPatologias($obj) {
+        AdiantiCoreApplication::gotoPage('PatologiaPacienteListManual', 'onReload', $obj);
     }
 }

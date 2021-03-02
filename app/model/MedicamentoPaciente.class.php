@@ -9,7 +9,6 @@ class MedicamentoPaciente extends TRecord
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     
-    
     private $paciente;
     private $medicamento;
 
@@ -25,6 +24,7 @@ class MedicamentoPaciente extends TRecord
         parent::addAttribute('quantidade');
         parent::addAttribute('hora');
         parent::addAttribute('miligramas');
+        parent::addAttribute('sn'); // se necessário default = false
     }
 
     

@@ -1,17 +1,11 @@
 <?php
-/**
- * Paciente Active Record
- * @author  <your-name-here>
- */
+
 class Paciente extends TRecord
 {
     const TABLENAME = 'paciente';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
-    
-    /**
-     * Constructor method
-     */
+
     public function __construct($id = NULL, $callObjectLoad = TRUE)
     {
         parent::__construct($id, $callObjectLoad);
@@ -42,15 +36,27 @@ class Paciente extends TRecord
         TTransaction::close();
     }
     
-    public function getResponsavel() {
-    
+    public function getResponsavel() 
+    {
         TTransaction::open('db');
-        
         $Repo = new TRepository('Responsavel');
         $Criteria = new TCriteria;
         $Criteria->add(new TFilter('paciente_id', '=', $this->id));
         $Responsavel = $Repo->load($Criteria);
         TTransaction::close();
         return $Responsavel;            
+    }
+    
+    public function getMedicamentosPaciente() 
+    {
+        TTransaction::open('db');
+        $Repo = new TRepository('MedicamentoPaciente');
+        $Criteria = new TCriteria;
+        $Criteria->setProperty('order', 'hora');
+        $Criteria->setProperty('direction','asc');
+        $Criteria->add(new TFilter('paciente_id', '=', $this->id));
+        $Medicamentos = $Repo->load($Criteria);
+        TTransaction::close();
+        return $Medicamentos;
     }
 }

@@ -1,20 +1,18 @@
 <?php
-/**
- * PacienteFormList Form List
- * @author  <your name here>
- */
- 
+
+     const DIAS     = 28;
+     const DIA_BASE = 14;
+     const MEDICO   = 'Adriane Schneider';
+     const CRM      = '32112';
+     
 class PacienteFormList extends TPage
 {
     protected $form; // form
     protected $datagrid; // datagrid
     protected $pageNavigation;
     protected $loaded;
+    public $Paciente;
     
-    /**
-     * Form constructor
-     * @param $param Request
-     */
     public function __construct( $param )
     {
         parent::__construct();
@@ -22,8 +20,6 @@ class PacienteFormList extends TPage
         $this->form = new BootstrapFormBuilder('form_Paciente');
         $this->form->setFormTitle('Cadastro de Pacientes');
        
-
-        // create the form fields
         $id = new THidden('id');
         $nome = new TEntry('nome');
         
@@ -85,38 +81,26 @@ class PacienteFormList extends TPage
             $id->setEditable(FALSE);
         }
         
-        /** samples
-         $fieldX->addValidation( 'Field X', new TRequiredValidator ); // add validation
-         $fieldX->setSize( '100%' ); // set size
-         **/
-        
-        // create the form actions
         $btn = $this->form->addAction(_t('Save'), new TAction([$this, 'onSave']), 'fa:save');
         $btn->class = 'btn btn-sm btn-primary';
         $this->form->addActionLink(_t('New'),  new TAction([$this, 'onEdit']), 'fa:eraser red');
        
-        // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->style = 'width: 100%';
         
-        // creates the datagrid columns
         $column_id = new TDataGridColumn('id', 'Id', 'left');
         $column_nome = new TDataGridColumn('nome', 'Nome', 'left');
         $column_dataNasc = new TDataGridColumn('dataNasc', 'Data nasc.', 'left');
-        //$column_cartaoSus = new TDataGridColumn('cartaoSus', 'Cartao SUS', 'left');
+
         $column_cpf = new TDataGridColumn('cpf', 'CPF', 'left');
         $column_ativo = new TDataGridColumn('ativo', 'Ativo', 'left');
         $column_ativo->setTransformer(array($this, 'getNomeSituacao'));
 
-        // add the columns to the DataGrid
-        //$this->datagrid->addColumn($column_id);
         $this->datagrid->addColumn($column_nome);
         $this->datagrid->addColumn($column_dataNasc);
-        //$this->datagrid->addColumn($column_cartaoSus);
         $this->datagrid->addColumn($column_cpf);
         $this->datagrid->addColumn($column_ativo);
         
-        // creates two datagrid actions
         $action1 = new TDataGridAction([$this, 'onEdit']);
         $action1->setLabel(_t('Edit'));
         $action1->setImage('far:edit blue');
@@ -137,56 +121,41 @@ class PacienteFormList extends TPage
         $action4->setImage('fa: fa-newspaper green');
         $action4->setField('id');
         
-        // add the actions to the datagrid
-        
+        $action5 =  new TDataGridAction([$this, 'onGenerateFolhaMedicacao']);
+        $action5->setLabel('Folha medicação');
+        $action5->setImage('fa: fa-newspaper green');
+        $action5->setField('id');
+       
         $actionGroup = new TDataGridActionGroup(null, 'fa:bars green');
         $actionGroup->addAction($action1);
         $actionGroup->addAction($action2);
         $actionGroup->addAction($action3);
         $actionGroup->addAction($action4);
+        $actionGroup->addAction($action5);
         
-        //$this->datagrid->addAction($action1);
-        //$this->datagrid->addAction($action2);
-        //$this->datagrid->addAction($action3);
-        //$this->datagrid->addAction($action4);
-        
-        // create the datagrid model
         $this->datagrid->addActionGroup($actionGroup);
         $this->datagrid->createModel();
         
-        // creates the page navigation
         $this->pageNavigation = new TPageNavigation;
         $this->pageNavigation->setAction(new TAction([$this, 'onReload']));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
-        // vertical box container
         $container = new TVBox;
         $container->style = 'width: 100%';
-        // $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         $container->add($this->form);
         $container->add(TPanelGroup::pack('', $this->datagrid, $this->pageNavigation));
-        
         parent::add($container);
     }
     
-    /**
-     * Load the datagrid with data
-     */
-
     public function onReload($param = NULL)
     {
         try
         {
-            // open a transaction with database 'db'
             TTransaction::open('db');
-            
-            // creates a repository for Paciente
             $repository = new TRepository('Paciente');
             $limit = 20;
-            // creates a criteria
+
             $criteria = new TCriteria;
-            
-            // default order
             if (empty($param['order']))
             {
                 $param['order'] = 'nome';
@@ -195,21 +164,17 @@ class PacienteFormList extends TPage
             $criteria->setProperties($param); // order, offset
             $criteria->setProperty('limit', $limit);
             
-            // load the objects according to criteria
             $objects = $repository->load($criteria, FALSE);
             
             $this->datagrid->clear();
             if ($objects)
             {
-                // iterate the collection of active records
                 foreach ($objects as $object)
                 {
-                    // add the object inside the datagrid
                     $this->datagrid->addItem($object);
                 }
             }
             
-            // reset the criteria for record count
             $criteria->resetProperties();
             $count= $repository->count($criteria);
             
@@ -217,36 +182,23 @@ class PacienteFormList extends TPage
             $this->pageNavigation->setProperties($param); // order, page
             $this->pageNavigation->setLimit($limit); // limit
             
-            // close the transaction
             TTransaction::close();
             $this->loaded = true;
         }
         catch (Exception $e) // in case of exception
         {
-            // shows the exception error message
             new TMessage('error', $e->getMessage());
-            
-            // undo all pending operations
             TTransaction::rollback();
         }
     }
     
-    /**
-     * Ask before deletion
-     */
     public static function onDelete($param)
     {
-        // define the delete action
         $action = new TAction([__CLASS__, 'Delete']);
         $action->setParameters($param); // pass the key parameter ahead
-        
-        // shows a dialog to the user
         new TQuestion(AdiantiCoreTranslator::translate('Do you really want to delete ?'), $action);
     }
     
-    /**
-     * Delete a record
-     */
     public static function Delete($param)
     {
         try
@@ -267,38 +219,19 @@ class PacienteFormList extends TPage
         }
     }
     
-    /**
-     * Save form data
-     * @param $param Request
-     */
     public function onSave( $param )
     {
         try
         {
             TTransaction::open('db'); // open a transaction
-            
-            /**
-            // Enable Debug logger for SQL operations inside the transaction
-            TTransaction::setLogger(new TLoggerSTD); // standard output
-            TTransaction::setLogger(new TLoggerTXT('log.txt')); // file
-            **/
-            
             $this->form->validate(); // validate form data
             $data = $this->form->getData(); // get form data as array
             $data->nome = strtoupper($data->nome);
             $object = new Paciente;  // create an empty object
             
-            
-            
-            //unset((array)$data['dataEntrada']);
-            
             $object->fromArray( (array) $data); // load the object with data
             $object->store(); // save the object
-            
-            // get the generated id
             $data->id = $object->id;
-            
-            
             $this->form->setData($data); // fill form data
             TTransaction::close(); // close the transaction
             
@@ -313,20 +246,12 @@ class PacienteFormList extends TPage
             TTransaction::rollback(); // undo all pending operations
         }
     }
-    
-    /**
-     * Clear form data
-     * @param $param Request
-     */
+
     public function onClear( $param )
     {
         $this->form->clear(TRUE);
     }
     
-    /**
-     * Load object to form data
-     * @param $param Request
-     */
     public function onEdit( $param )
     {
         try
@@ -357,9 +282,7 @@ class PacienteFormList extends TPage
     }
     
     public function onGenerateFolha($obj) {
-       
         TTransaction::open('db');
-        
         $Paciente = new Paciente($obj['id']);
         $designer = new TPDFDesigner;
         $designer->fromXml('app/reports/folha_paciente_cama.pdf.xml');
@@ -369,7 +292,6 @@ class PacienteFormList extends TPage
         $designer->replace('{cartao_sus}', $Paciente->cartaoSus);
         $designer->replace('{rg}', $Paciente->rg);
         $designer->replace('{cpf}', $Paciente->cpf);
-        
         $patologias = implode(', ', $Paciente->getPatologias());
         $Responsavel = $Paciente->getResponsavel();
         TTransaction::close();
@@ -383,21 +305,14 @@ class PacienteFormList extends TPage
         $designer->replace('{responsavel}', @$responsavel);
         $designer->replace('{fone_responsavel}', @$fone_responsavel);
         $designer->replace('{patologia}', utf8_decode($patologias));
-    
         $this->form->setData($Paciente);    
-            
         $designer->generate();
         $designer->save('app/output/folha_paciente.pdf');
         parent::openFile('app/output/folha_paciente.pdf');
     }
     
-    /**
-     * method show()
-     * Shows the page
-     */
     public function show()
     {
-        // check if the datagrid is already loaded
         if (!$this->loaded AND (!isset($_GET['method']) OR $_GET['method'] !== 'onReload') )
         {
             $this->onReload( func_get_arg(0) );
@@ -406,19 +321,123 @@ class PacienteFormList extends TPage
     }
     
     public function getIdade($data) {
-    list($dia, $mes, $ano) = explode('/', $data);
+        list($dia, $mes, $ano) = explode('/', $data);
 
-    // data atual
-    $hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-    // Descobre a unix timestamp da data de nascimento do fulano
-    $nascimento = mktime( 0, 0, 0, $mes, $dia, $ano);
-
-    // cálculo
-    $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
-     return $idade;
+        $hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+        $nascimento = mktime( 0, 0, 0, $mes, $dia, $ano);
+        $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
+        return $idade;
     }
     
-    public function goToPatologias($obj) {
+    public function goToPatologias($obj) 
+    {
         AdiantiCoreApplication::gotoPage('PatologiaPacienteListManual', 'onReload', $obj);
     }
+    
+    public function onGenerateFolhaMedicacao($obj) 
+    {
+        TTransaction::open('db');
+        $this->Paciente = new Paciente($obj['id']);
+        TTransaction::close();
+        $table = new TTable;
+        $table->border = 1;
+        $table->cellpadding = 4;
+        $table->style = 'border-collapse:collapse;';
+        $table->width = "100%";
+        $row = $table->addRow();
+        $row->style='border:0px;';
+        $cell = $row->addCell('<img src="./app/images/logo.png" width="30%">');
+        $cell = $row->addCell('<b style="line-height:30px;"><font size="4">Residencial Geriátrico Recanto das Oliveiras CNPJ: 32.518.290/0001-56</font><br />
+                                Rua Joaquim Nabuco, 320 - Jd. Aparecida Alvorada/RS CEP: 94856-610<br />        
+                                Fone: 51 3101-2520</b>');
+        $cell->colspan = 30;                        
+        $row = $table->addRow();
+        $row->style="border: 0px";
+        $row->addCell('<b>Paciente : ' . $this->Paciente->nome . '</b>');
+        $cell = $row->addCell('<b>DN : ' . $this->Paciente->dataNasc . '</b>');
+        $cell->colspan = 6;
+        $cell = $row->addCell('<b>Patologias : ' . implode(', ', $this->Paciente->getPatologias()) . '</b>');
+        $cell->colspan = 15;
+        
+        $cell = $row->addCell('<b>'.$this->getPeriodo().'</b>');
+        $cell->colspan = 8;
+        $cell->style="border-right: 1px solid black;";
+                
+        $row = $table->addRow();
+        $cell = $row->addCell('<b>Médico(a): ' . MEDICO . '</b>');
+        $cell->style ="border: 0px";
+        $cell = $row->addCell('<b>CRM: ' . CRM . '</b>');
+        $cell->style ="border: 0px";
+        $cell->colspan = 30;
+        $row = $table->addRow();
+        
+        foreach ($this->getCabecalhoTabela() as $coluna) {
+            $cell = $row->addCell($coluna);
+            $cell->align = "center";
+            $cell->style = "font-weight: bold; border: 1px solid black;";
+        }
+
+        foreach ($this->Paciente->getMedicamentosPaciente() as $Medicamento) {
+            TTransaction::open('db');
+
+            $row = $table->addRow();
+            $conteudo = $Medicamento->get_medicamento()->nome;
+            $conteudo .= ' ';
+            $conteudo .= $Medicamento->miligramas .'MG ' ;
+            $conteudo .= $Medicamento->quantidade . $Medicamento->get_medicamento()->getMedida()->sigla;
+            $conteudo .= $Medicamento->sn === 'true' ? ' (SN) ' : '';
+            $cell = $row->addCell( $conteudo );
+            $cell->style = "font-weight: bold; border: 1px solid black;";
+
+            for($i = 0; $i < DIAS; $i++) {
+                $cell = $row->addCell($Medicamento->hora);
+                $cell->style = "border: 1px solid black;";
+                $cell->align = "center";
+            }
+            TTransaction::close();
+        }
+        
+        $this->onGenerateArquivoFolhaMedicacao($table);
+    }
+   
+    private function getCabecalhoTabela()
+    {
+        $diasMes = DIAS;    
+        $diaBase = DIA_BASE; 
+        $dias[] = 'Medicamento';
+
+        for($x = 1; $x <= $diasMes; $x++) {
+            if($diaBase > $diasMes) {
+                $diaBase = 1;
+            }
+            $dias[] = $diaBase++;
+        }
+        return $dias;
+    }
+    
+    private function onGenerateArquivoFolhaMedicacao($tabela) 
+    {
+        $tabela = "<div style=\"font-family: Arial, Helvetica, sans-serif;\">$tabela</div>";
+        $html = new AdiantiHTMLDocumentParser('app/output/folha_medicacao.html');
+        $html = AdiantiHTMLDocumentParser::newFromString($tabela);
+        $document = 'tmp/'.uniqid().'.html'; 
+        $html->save($document, 'A4', 'landscape');
+        parent::openFile($document);
+    }
+    
+    public function goToFolhaMedicacao($id) 
+    {
+        AdiantiCoreApplication::gotoPage('FolhaReceitaPaciente', '', $id);
+    }
+    
+    public function getPeriodo() 
+    {
+        $nomeMes  = [1 => 'JAN', 2 => 'FEV', 3 => 'MAR', 4 => 'ABR', 5 => 'MAI', 6 => 'JUN', 7 => 'JUL', 8 => 'AGO', 9 => 'SET', 10 => 'OUT', 11 => 'NOV', 12 => 'DEZ'];
+        $mes = +date('m');
+        
+        if(+date('d') > DIA_BASE) {
+            $mes++;
+        }
+        return $nomeMes[$mes].'/'.$nomeMes[$mes+1].'/'.date('y');
+   }
 }

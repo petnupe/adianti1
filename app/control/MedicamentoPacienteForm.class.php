@@ -28,7 +28,10 @@ class MedicamentoPacienteForm extends TPage
         $miligramas = new TEntry('miligramas');
         $quantidade = new TEntry('quantidade');
         $hora = new TEntry('hora');
-
+        
+        $sn = new TCombo('sn');
+        $sn->setDefaultOption(false);
+        $sn->addItems(['false' => 'Não', 'true' => 'Sim']);
 
         // add the fields
         $this->form->addFields( [ new TLabel('Paciente') ], [ $paciente_id ] );
@@ -38,9 +41,9 @@ class MedicamentoPacienteForm extends TPage
         $lbMedida = new TLabel('');
         $lbMedida->setId('lbMedida');
         
-        
         $this->form->addFields( [ new TLabel('Quantidade') ], [ $quantidade ], [$lbMedida] );
-        $this->form->addFields( [ new TLabel('Hora') ], [ $hora ] );
+        $this->form->addFields( [ new TLabel('Hora') ], [ $hora ], [new TLabel('Se necessário')], [$sn]);
+        //$this->form->addFields( );
 
         // set sizes
         $paciente_id->setSize('75%');
@@ -157,7 +160,6 @@ class MedicamentoPacienteForm extends TPage
         $data->paciente_id = $paciente_id;
         $this->form->clear();
         $this->form->setData($data);
-        
     }
     
     public static function getMedidaMedicamento($medicamento = null) {

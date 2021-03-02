@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design>
+    <page>
+        <format>a4</format>
+        <orientation>L</orientation>
+    </page>
+    <anchor id="1">
+        <class>Anchor</class>
+        <x>19</x>
+        <y>18</y>
+        <name>tabela</name>
+    </anchor>
+</design>

@@ -151,7 +151,7 @@ class TAction
      */
     public function getProperty($property)
     {
-        return $this->properties[$property] ?? null;
+        return $this->properties[$property];// ?? null;
     }
     
     /**

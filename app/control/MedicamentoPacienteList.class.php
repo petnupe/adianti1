@@ -138,6 +138,41 @@ class MedicamentoPacienteList extends TPage
         $combo->addItems($array);
         return $combo;
     }
+
+    public static function onDelete($param)
+    {
+        // define the delete action
+        $action = new TAction([__CLASS__, 'Delete']);
+        $action->setParameters($param); // pass the key parameter ahead
+        
+        // shows a dialog to the user
+        new TQuestion(AdiantiCoreTranslator::translate('Do you really want to delete ?'), $action);
+    }
+    
+    /**
+     * Delete a record
+     */
+    public static function Delete($param)
+    {
+        try
+        {
+            $key = $param['key']; // get the parameter $key
+            TTransaction::open('db'); // open a transaction with database
+            $object = new MedicamentoPaciente($key, FALSE); // instantiates the Active Record
+
+            $object->delete(); // deletes the object from the database
+            TTransaction::close(); // close the transaction
+            
+            $pos_action = new TAction([__CLASS__, 'onReload']);
+            new TMessage('info', AdiantiCoreTranslator::translate('Record deleted'), $pos_action); // success message
+        }
+        catch (Exception $e) // in case of exception
+        {
+            new TMessage('error', $e->getMessage()); // shows the exception error message
+            TTransaction::rollback(); // undo all pending operations
+        }
+    }
+
 }
 
 

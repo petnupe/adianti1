@@ -22,6 +22,7 @@ class MedicamentoPacienteForm extends TPage
         
 
         // create the form fields
+        $id = new THidden('id');
         $paciente_id = new TDBCombo('paciente_id', 'db', 'Paciente', 'id', 'nome', 'nome');
         $medicamento_id = new TDBCombo('medicamento_id', 'db', 'Medicamento', 'id', 'nome', 'nome');
         $medicamento_id->setChangeAction(new TAction(array($this, 'getMedidaMedicamento')));
@@ -31,9 +32,10 @@ class MedicamentoPacienteForm extends TPage
         
         $sn = new TCombo('sn');
         $sn->setDefaultOption(false);
-        $sn->addItems(['false' => 'NÃ£o', 'true' => 'Sim']);
+        $sn->addItems(['false' => 'Não', 'true' => 'Sim']);
 
         // add the fields
+        $this->form->addFields( [ new TLabel('') ], [ $id ] );
         $this->form->addFields( [ new TLabel('Paciente') ], [ $paciente_id ] );
         $this->form->addFields( [ new TLabel('Medicamento') ], [ $medicamento_id ] );
         $this->form->addFields( [ new TLabel('Miligramas') ], [ $miligramas ] );
@@ -42,7 +44,7 @@ class MedicamentoPacienteForm extends TPage
         $lbMedida->setId('lbMedida');
         
         $this->form->addFields( [ new TLabel('Quantidade') ], [ $quantidade ], [$lbMedida] );
-        $this->form->addFields( [ new TLabel('Hora') ], [ $hora ], [new TLabel('Se necessÃ¡rio')], [$sn]);
+        $this->form->addFields( [ new TLabel('Hora') ], [ $hora ], [new TLabel('Se necessário')], [$sn]);
         //$this->form->addFields( );
 
         // set sizes
@@ -94,7 +96,6 @@ class MedicamentoPacienteForm extends TPage
             
             $this->form->validate(); // validate form data
             $data = $this->form->getData(); // get form data as array
-            
             $object = new MedicamentoPaciente;  // create an empty object
             $object->fromArray( (array) $data); // load the object with data
             $object->store(); // save the object

@@ -22,7 +22,7 @@ class MedicamentoPacienteList extends TPage
         
         $this->setDatabase('db');            // defines the database
         $this->setActiveRecord('MedicamentoPaciente');   // defines the active record
-        $this->setDefaultOrder('id', 'asc');         // defines the default order
+        $this->setDefaultOrder('hora', 'asc');         // defines the default order
         $this->setLimit(100);
         // $this->setCriteria($criteria) // define a standard filter
 
@@ -147,6 +147,7 @@ class MedicamentoPacienteList extends TPage
         
         // shows a dialog to the user
         new TQuestion(AdiantiCoreTranslator::translate('Do you really want to delete ?'), $action);
+
     }
     
     /**
@@ -160,19 +161,18 @@ class MedicamentoPacienteList extends TPage
             TTransaction::open('db'); // open a transaction with database
             $object = new MedicamentoPaciente($key, FALSE); // instantiates the Active Record
 
+            $paciente_id = $object->Paciente->id;
+
             $object->delete(); // deletes the object from the database
             TTransaction::close(); // close the transaction
-            
-            $pos_action = new TAction([__CLASS__, 'onReload']);
-            new TMessage('info', AdiantiCoreTranslator::translate('Record deleted'), $pos_action); // success message
+            new TMessage('info', AdiantiCoreTranslator::translate('Record deleted')); // success message
         }
         catch (Exception $e) // in case of exception
         {
             new TMessage('error', $e->getMessage()); // shows the exception error message
             TTransaction::rollback(); // undo all pending operations
         }
+       
+        AdiantiCoreApplication::postData('form_search_MedicamentoPaciente', __CLASS__, 'onSearch', ['paciente_id' => $paciente_id]);
     }
-
 }
-
-
